@@ -7,7 +7,6 @@ Fargo.Runtime.extend({
         this._scope = this._createScope(args);
         this._stack = new R.Stack(new R.Body(this._body, this._scope));
       }
-      
       var runtime = this._scope.runtime,
           fiber   = runtime.currentFiber,
           stack   = runtime.stack;

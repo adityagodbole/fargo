@@ -44,6 +44,13 @@ Fargo.runtime.syntax('lambda', function(scope, cells) {
   return new Runtime.Procedure(scope, cells.car, cells.cdr);
 });
 
+Fargo.runtime.syntax('js-lambda', function(scope, cells) {
+  var p = Runtime.Procedure(scope, cells.car, cells.cdr);
+  return function(args) {
+	p.apply(args);
+  }
+});
+
 Fargo.runtime.syntax('quote', function(scope, cells) {
   return Fargo.freeze(cells.car);
 });
@@ -128,6 +135,44 @@ Fargo.runtime.define('symbol?', function(object) {
 
 Fargo.runtime.define('procedure?', function(object) {
   return object.klass === Runtime.Function;
+});
+
+//================================================================
+// JS Object functions
+
+Fargo.runtime.define(':', function(o,p) {
+  if(arguments.length == 2) {
+    return o[p.name];
+  }
+  else if(arguments.length == 3) {
+    o[p.name] = arguments[2];
+	return o;
+  }
+});
+
+Fargo.runtime.define('obj', function() {
+  var i,
+	  o = {};
+  for(i = 0; i < arguments.length; i += 2) {
+	o[arguments[i]] = arguments[i + 1];
+  }
+  return o;
+});
+
+Fargo.runtime.define('proc', function(name) {
+  var fname,
+      arg;
+  if (arguments.length == 2) {
+	name = arguments[1][name.name];
+  }
+  if(typeof name === 'function') {
+	arg = name;
+  }
+  else {
+	arg = eval(name.name);
+  }
+  fname = "__fargo__" + name;
+  return Fargo.runtime.define(fname,arg);
 });
 
 //================================================================

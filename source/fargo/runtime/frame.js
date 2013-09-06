@@ -18,11 +18,11 @@ Fargo.Runtime.extend({
       }
       
       var proc = this._values.car;
-      
       if (proc.klass === Runtime.Syntax || proc.klass === Runtime.Macro || this._current === NULL) {
         
-        if (typeof proc.call !== 'function')
+        if (proc && typeof proc.call !== 'function') {
           throw new Error('Invalid expression: ' + this._expression);
+		}
         
         this.complete = true;
         var result = proc.call(scope, this._values.cdr);
@@ -39,7 +39,6 @@ Fargo.Runtime.extend({
           value   = this._curValue;
       
       var result = stack.push(new Runtime.Frame(current.car, scope));
-      
       this._curValue.car = result;
       this._current = this._current.cdr;
       this._curValue = this._curValue.cdr;
@@ -87,7 +86,6 @@ Fargo.Runtime.extend({
       var expression = this._expression.car,
           Frame      = Fargo.Runtime.Frame,
           NULL       = Fargo.Runtime.Cons.NULL;
-      
       this._expression = this._expression.cdr;
       
       if (this._expression === NULL) {

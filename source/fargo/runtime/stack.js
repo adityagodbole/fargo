@@ -47,8 +47,9 @@ Fargo.Runtime.extend({
       if (this._tail) this._value.target = last.target;
       frames.pop();
       
-      if (klass && (klass === Frame || klass.superclass === Frame))
+      if (klass && (klass === Frame || klass.superclass === Frame)) {
         this._frames.push(value);
+	  }
     },
     
     setValue: function(value) {
